@@ -66,13 +66,33 @@ const mainController = {
     res.render('home');
   },
   edit: (req, res) => {
-    // Implement edit book
-    res.render('editBook', {id: req.params.id})
-  },
+		let libroeditar = db.Book.findByPk(req.params.id)
+			.then((libroeditar) => {
+				return res.render('editBook', { libroeditar })
+			})
+			.catch(error => res.send(error))
+	},
   processEdit: (req, res) => {
-    // Implement edit book
-    res.render('home');
-  }
+    let libroeditar = db.Book.findByPk(req.params.id)
+      .then((libroeditar) => {
+        let books = {
+          title: req.body.title,
+          cover: req.body.cover,
+          description: req.body.description
+        }
+        db.Book.update(books, { where: { id: req.params.id } })
+          .then(() => {
+          return res.render ('home')
+      })
+    })
+  },
+  deleteBook: (req, res) => {
+    db.Book.destroy({where:{ id: req.params.id }})
+      .then (() => {
+        res.redirect('home');
+      })
+      .catch(error => res.send(error))
+  },
 };
 
 module.exports = mainController;
