@@ -12,11 +12,11 @@ const mainController = {
       .catch((error) => console.log(error));
   },
   bookDetail: (req, res) => {
-    let libro =  db.Book.findByPk(req.params.id, {
+    let book =  db.Book.findByPk(req.params.id, {
       include: [{ association: 'authors' }]
     })
-      .then((libro) => {
-            res.render('bookDetail',{libro});
+      .then((books) => {
+            res.render('bookDetail',{ books });
       }); 
     },
   bookSearch: (req, res) => {
