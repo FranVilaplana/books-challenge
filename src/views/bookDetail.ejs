@@ -13,18 +13,20 @@
 
     <div class="container">
       <div class="px-4 py-5 my-5 text-center">
-        <img class="d-block mx-auto mb-4" src= "<%= libro.cover %>" alt="" width="172" height="257">
-        <h1 class="display-5 fw-bold"> <%= libro.title %></h1>
+        <img class="d-block mx-auto mb-4" src= "<%= books.cover %>" alt="" width="172" height="257">
+        <h1 class="display-5 fw-bold"> <%= books.title %></h1>
         <div class="col-lg-6 mx-auto">
-          <p class="lead mb-4 fw-bold">Authors: <% libro.authors.map((author, index) => { %>
-            <%= `${author.name}${(index === libro.authors.length - 1) ? '.' : ', '}` %>
+          <p class="lead mb-4 fw-bold">Authors: <% books.authors.map((author, index) => { %>
+            <%= `${author.name}${(index === books.authors.length - 1) ? '.' : ', '}` %>
           <% }) %> </p>
           <p class="lead mb-4 fw-bold">Release Date: </p>
-          <p class="lead mb-4"> <%= libro.description %></p>
+          <p class="lead mb-4"> <%= books.description %></p>
+          <% if (locals.userType) { %>
           <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Edit</button>
-            <button type="button" class="btn btn-outline-secondary btn-lg px-4">Delete</button>
-          </div>
+            <button type="button" class="btn btn-primary btn-lg px-4 gap-3"> <a href="/books/edit/<%= books.id %>"> Edit </a></button>
+            <form action="/books/<%= books.id %>?_method=DELETE" method="POST" style="display: inline-flex"></form>
+            <button type="submit" class="btn btn-outline-secondary btn-lg px-4">Delete</button>
+          </div>  <% } %>
         </div>
       </div>
   </div>
