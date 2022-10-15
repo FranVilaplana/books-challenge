@@ -1,6 +1,6 @@
 const express = require('express');
 const mainController = require('../controllers/main');
-
+const guestMiddleware = require('../middlewares/admin');
 const router = express.Router();
 
 router.get('/', mainController.home);
@@ -13,8 +13,9 @@ router.get('/users/register', mainController.register);
 router.post('/users/register', mainController.processRegister);
 router.get('/users/login', mainController.login);
 router.post('/users/login', mainController.processLogin);
-router.delete('/books/:id', mainController.deleteBook);
-router.get('/books/edit/:id', mainController.edit);
+router.delete('/books/:id', guestMiddleware ,mainController.deleteBook);
+router.get('/books/edit/:id', guestMiddleware ,mainController.edit);
 router.put('/books/edit/:id', mainController.processEdit);
+router.get('/users/logout', mainController.logout);
 
 module.exports = router;

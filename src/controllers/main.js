@@ -26,10 +26,6 @@ const mainController = {
     // Implement search by title
     res.render('search');
   },
-  deleteBook: (req, res) => {
-    // Implement delete book
-    res.render('home');
-  },
   authors: (req, res) => {
     db.Author.findAll()
       .then((authors) => {
@@ -58,12 +54,37 @@ const mainController = {
       .catch((error) => console.log(error));
   },
   login: (req, res) => {
-    // Implement login process
-    res.render('login');
+    return res.render('login');
   },
   processLogin: (req, res) => {
-    // Implement login process
-    res.render('home');
+    db.User.findOne({where: { email: req.body.email }})
+    .then((usuario) => {
+      if (usuario) {
+        let passOk = bcryptjs.compareSync(req.body.password, usuario.password)
+        if (passOk) {
+          delete usuario.password 
+          req.session.usuarioLogueado = usuario
+          res.cookie("userEmail", req.body.email, { maxAge: 300 * 60 * 60 })
+          res.redirect('home');
+        } else {
+          return res.render("login", {
+            errors: {
+              datosMal: {
+                msg: "Las credenciales son inválidas"
+              }
+            }
+          })
+        }
+      } else {
+        return res.render("login", {
+          errors: {
+            datosMal: {
+              msg: "Las credenciales son inválidas"
+            }
+          }
+        })
+      }
+    })
   },
   edit: (req, res) => {
 		let libroeditar = db.Book.findByPk(req.params.id)
@@ -72,6 +93,11 @@ const mainController = {
 			})
 			.catch(error => res.send(error))
 	},
+  logout: (req, res) => {
+    res.clearCookie('userEmail');
+    req.session.destroy();
+    return res.render("home");
+  },
   processEdit: (req, res) => {
     let libroeditar = db.Book.findByPk(req.params.id)
       .then((libroeditar) => {
