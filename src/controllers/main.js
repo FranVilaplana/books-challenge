@@ -45,7 +45,7 @@ const mainController = {
       Name: req.body.name,
       Email: req.body.email,
       Country: req.body.country,
-      Pass: bcryptjs.hashSync(req.body.password, 10),
+      Pass: bcryptjs.hashSync(req.body.password, 8),
       CategoryId: req.body.category
     })
       .then(() => {

@@ -106,6 +106,9 @@
                   <label for="admin">Admin</label>
                   <input type="radio" name="category" id="user" value="2" />
                   <label for="user">User</label>
+                  <% if (locals.errors && errors.category) { %>
+                    <p style="color: red;"><%= errors.category.msg %></p>
+                  <% } %>
   
                 </div>
               </div>
@@ -122,6 +125,7 @@
         </div>
       </div>
     </div>
+    <script src="/js/registro.js"></script>
   </section>
 </div>
 <%- include('partials/footer.ejs') %>

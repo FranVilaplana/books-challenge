@@ -22,6 +22,4 @@ module.exports = (req,res,next) =>{
         })} else{
         return res.redirect("/accesodenegado");
     };
-    
-
 }
