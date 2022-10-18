@@ -4,6 +4,8 @@ const methodOverride =  require('method-override');
 const app = express();
 const session = require("express-session");
 const cookieParser = require('cookie-parser');
+const acceso = require("./middlewares/acceso")
+
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -17,6 +19,7 @@ app.use(session({
   saveUninitialized: false
 }))
 app.use('/', mainRouter);
+app.use(acceso);
 app.listen(3000, () => {
   console.log('listening in http://localhost:3000');
 });

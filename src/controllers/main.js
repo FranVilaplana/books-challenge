@@ -71,7 +71,7 @@ const mainController = {
         if (passOk) { 
           req.session.usuarioLogueado = usuario
           delete usuario.password
-          res.cookie("userEmail", req.body.email, { maxAge: 300 * 60 * 60 })
+          res.cookie("email", req.body.email, { maxAge: 300 * 60 * 60 })
           res.redirect('/');
         } else {
           return res.render("login", {
@@ -128,9 +128,9 @@ const mainController = {
 			})
   },
   deleteBook: (req, res) => {
-    db.Book.destroy({ where: { id:req.params.id }, force: true })
-      .then(() => {
-        return res.redirect('/')
+    db.BooksAuthors.destroy({ where: { BookId:req.params.id }, force: true })
+      .then((result) => {
+        res.send(result)
       })
       .catch(error => res.send(error))
   },
