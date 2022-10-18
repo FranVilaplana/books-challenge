@@ -17,7 +17,7 @@
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-xl-9">
   
-          <h1 class="text-white mb-4">Edit book <%= libroeditar.id %> </h1>
+          <h1 class="text-white mb-4">Edit book <%= books.id %> </h1>
   
           <form action="/books/edit/<%= libroeditar.id %> " method="POST" class="card" style="border-radius: 15px;">
             <div class="card-body">
@@ -31,7 +31,9 @@
                 <div class="col-md-9 pe-5">
   
                   <input type="text" name="title" class="form-control form-control-lg" />
-  
+                  <% if (locals.errors && errors.title) { %>
+                    <p style="color: red;"><%= errors.title.msg %></p>
+                  <% } %>
                 </div>
               </div>
 
@@ -46,7 +48,9 @@
                 <div class="col-md-9 pe-5">
   
                   <input type="text" name="cover" class="form-control form-control-lg" />
-  
+                  <% if (locals.errors && errors.cover) { %>
+                    <p style="color: red;"><%= errors.cover.msg %></p>
+                  <% } %>
                 </div>
               </div>
   
@@ -61,7 +65,9 @@
                 <div class="col-md-9 pe-5">
   
                   <input type="text" name="description" class="form-control form-control-lg" />
-  
+                  <% if (locals.errors && errors.description) { %>
+                    <p style="color: red;"><%= errors.description.msg %></p>
+                  <% } %>
                 </div>
               </div>
   
@@ -73,11 +79,12 @@
   
             </div>
           </form>
-  
+
         </div>
       </div>
     </div>
   </section>
+  <script src="/js/editBook.js"></script>
 </div>
 <%- include('partials/footer.ejs') %>
 </body>

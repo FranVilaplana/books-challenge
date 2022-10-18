@@ -52,7 +52,7 @@ const mainController = {
       Name: req.body.name,
       Email: req.body.email,
       Country: req.body.country,
-      Pass: bcryptjs.hashSync(req.body.password, 8),
+      Pass: bcryptjs.hashSync(req.body.password, 10),
       CategoryId: req.body.category
     })
       .then(() => {
@@ -67,12 +67,12 @@ const mainController = {
     db.User.findOne({where: { email: req.body.email }})
     .then((usuario) => {
       if (usuario) {
-        let passOk = bcryptjs.compareSync(req.body.password, usuario.password)
-        if (passOk) {
-          delete usuario.password 
+        let passOk = bcryptjs.compareSync(req.body.password, usuario.Pass)
+        if (passOk) { 
           req.session.usuarioLogueado = usuario
+          delete usuario.password
           res.cookie("userEmail", req.body.email, { maxAge: 300 * 60 * 60 })
-          res.redirect('home');
+          res.redirect('/');
         } else {
           return res.render("login", {
             errors: {
@@ -101,9 +101,9 @@ const mainController = {
     
   },
   logout: (req, res) => {
-    res.clearCookie('userEmail');
+    res.clearCookie('email');
     req.session.destroy();
-    return res.render("home");
+    return res.render("/");
   },
   processEdit: (req, res) => {
     const resultValidation = validationResult(req);

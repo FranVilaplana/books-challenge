@@ -22,21 +22,19 @@ module.exports.validar = (method) => {
                         throw new Error('El correo ya existe. Debes elegir otro');
                 });
                 }),
-                body('password')
+                body('pass')
                 .notEmpty().withMessage('la contraseña no puede estar vacía') 
                 .isLength({min:8}).withMessage('la contraseña debe tener al menos 8 caracteres'),      
                 
                 body('country')
-                .notEmpty().withMessage('El campo country no puede estar vacío')
-                .isLength({min: 2}).withMessage('Mìnimo 2 caracteres'),    
-
+                .notEmpty().withMessage('El campo country no puede estar vacío')  
             ]
         }
         case 'login': {
             return [
                 body ('email').isEmail().withMessage('Agregar un email válido'),
                 
-                body('password').isLength({min: 8 }).withMessage('La contraseña debe tener un mínimo de 8 caractéres'),
+                body('pass').isLength({min: 8 }).withMessage('La contraseña debe tener un mínimo de 8 caractéres'),
                 
                 body('email').custom( (value  ) =>{
                     db.User.findOne({where:{email :value}})
