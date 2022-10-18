@@ -8,12 +8,8 @@ window.addEventListener("load", function () {
         let errors = [];
         let password = document.querySelector('#password');
         let email = document.querySelector('#email');
-        var regexEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
 
         /// VALIDACION Email
-
-
         if (!regexEmail.test(email.value)) {
             errors.push('El email no cumple no tiene el formato correcto');
             email.classList.add('is-invalid');
@@ -22,10 +18,6 @@ window.addEventListener("load", function () {
             email.classList.add('is-valid');
             email.classList.remove('is-invalid');
         }
-
-
-
-
 
         /// VALIDACION password
         if (password.value.length < 8) {

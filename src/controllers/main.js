@@ -1,5 +1,6 @@
 const bcryptjs = require('bcryptjs');
 const db = require('../database/models');
+const { validationResult } = require('express-validator');
 
 const mainController = {
   home: (req, res) => {
@@ -12,13 +13,13 @@ const mainController = {
       .catch((error) => console.log(error));
   },
   bookDetail: (req, res) => {
-    let book =  db.Book.findByPk(req.params.id, {
-      include: [{ association: 'authors' }]
-    })
-      .then((books) => {
-            res.render('bookDetail',{ books });
-      }); 
-    },
+    db.Book.findByPk (req.params.id,{include: [{ association: 'authors' }]}
+      )
+        .then(book => {
+          res.render('bookDetail', {book}
+          );
+        });
+  },
   bookSearch: (req, res) => {
     res.render('search', { books: [] });
   },
@@ -34,9 +35,15 @@ const mainController = {
       .catch((error) => console.log(error));
   },
   authorBooks: (req, res) => {
-    // Implement books by author
-    res.render('authorBooks');
+    db.Author.findByPk(req.params.id, {
+      include: [{ association: 'books' }] // salen los libros duplicados
+    })
+  
+      .then((autor)  => {	
+        res.render('authorBooks', {autor} )
+      })
   },
+
   register: (req, res) => {
     res.render('register');
   },
@@ -87,36 +94,47 @@ const mainController = {
     })
   },
   edit: (req, res) => {
-		let libroeditar = db.Book.findByPk(req.params.id)
-			.then((libroeditar) => {
-				return res.render('editBook', { libroeditar })
-			})
-			.catch(error => res.send(error))
-	},
+      db.Book.findByPk(req.params.id)
+      .then((books) =>{
+      return res.render('editBook', {books})
+    })
+    
+  },
   logout: (req, res) => {
     res.clearCookie('userEmail');
     req.session.destroy();
     return res.render("home");
   },
   processEdit: (req, res) => {
-    let libroeditar = db.Book.findByPk(req.params.id)
-      .then((libroeditar) => {
-        let books = {
-          title: req.body.title,
-          cover: req.body.cover,
-          description: req.body.description
-        }
-        db.Book.update(books, { where: { id: req.params.id } })
-          .then(() => {
-          return res.render ('home')
-      })
-    })
+    const resultValidation = validationResult(req);
+    let bookToEdit=db.Book.findByPk(req.params.id)
+    Promise
+    .all([bookToEdit])
+    .then((bookToEdit)=> {
+      if (resultValidation.errors.length>0) {
+        res.render ('editBook', {bookToEdit, errors: resultValidation.mapped()})
+      console.log(resultValidation)
+    } else {
+      let books = {
+        title: req.body.title,
+        cover: req.body.cover,
+        description: req.body.description, 
+      }
+      db.Book.update(books, { where: { id: req.params.id } })	
+				.then(() => {
+					return res.redirect('/')
+					})		
+        }		
+			})
   },
   deleteBook: (req, res) => {
-    db.Book.destroy({where:{ id: req.params.id }})
-      .then (() => {
-        res.redirect('home');
+    db.Book.findByPk(req.params.id)
+      .then (()=>
+    db.Book.destroy({ where: { id:req.params.id }, force: true }) // te sale como que no se puede eliminar pq es una FK
+      .then(() => {
+        return res.redirect('/')
       })
+      )
       .catch(error => res.send(error))
   },
 };
