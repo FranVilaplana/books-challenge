@@ -36,7 +36,7 @@ const mainController = {
   },
   authorBooks: (req, res) => {
     db.Author.findByPk(req.params.id, {
-      include: [{ association: 'books' }] // salen los libros duplicados
+      include: [{ association: 'books' }]
     })
   
       .then((autor)  => {	
