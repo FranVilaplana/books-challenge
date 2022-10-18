@@ -16,7 +16,10 @@ module.exports = (sequelize, dataTypes) => {
     },
     description: {
       type: dataTypes.STRING
-    }
+    },
+    estado: {
+      type: dataTypes.INTEGER
+    },
   };
   let config = {
     tableName: 'books',

@@ -128,9 +128,9 @@ const mainController = {
 			})
   },
   deleteBook: (req, res) => {
-    db.BooksAuthors.destroy({ where: { BookId:req.params.id }, force: true })
-      .then((result) => {
-        res.send(result)
+    db.Book.update({estado :1 },{ where: { id: req.params.id }, force: true }) // force: true es para asegurar que se ejecute la acción
+      .then(() => {
+        return res.redirect('/')
       })
       .catch(error => res.send(error))
   },

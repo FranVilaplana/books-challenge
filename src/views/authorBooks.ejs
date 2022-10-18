@@ -16,6 +16,7 @@
     <div class="container">
       <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
         <% autor.books.forEach(function(book){ %>
+          <%  if(book.estado == 2){ %>
         <div class="feature col">
           <div class="feature-icon bg-gradient">
             <img class="d-block mx-auto mb-4" src= "<%= book.cover %>" alt="" width="172" height="257">
@@ -24,6 +25,7 @@
           <p>Book description. <%= book.description %></p>
           <a href="/books/detail/<%= book.id %>" class="icon-link">
             Detail
+            <% } %>
           </a> <% }) %>
         </div>
     </div>
