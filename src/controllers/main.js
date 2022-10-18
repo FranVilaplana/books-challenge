@@ -128,13 +128,10 @@ const mainController = {
 			})
   },
   deleteBook: (req, res) => {
-    db.Book.findByPk(req.params.id)
-      .then (()=>
-    db.Book.destroy({ where: { id:req.params.id }, force: true }) // te sale como que no se puede eliminar pq es una FK
+    db.Book.destroy({ where: { id:req.params.id }, force: true })
       .then(() => {
         return res.redirect('/')
       })
-      )
       .catch(error => res.send(error))
   },
 };
