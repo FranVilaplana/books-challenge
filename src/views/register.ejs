@@ -30,11 +30,12 @@
                 </div>
                 <div class="col-md-9 pe-5">
   
-                  <input type="text" name="name" class="form-control form-control-lg" />
+                  <input type="text" name="name" class="form-control <%= locals.errors && errors.name ? 'is-invalid' : null %> form-control-lg" />
                   <% if (locals.errors && errors.name) { %>
-                    <p style="color: red;"><%= errors.name.msg %></p>
+                    <div class="text-danger">
+                      <%= errors.name.msg %> 
+                    </div>
                   <% } %>
-  
                 </div>
               </div>
 
@@ -48,11 +49,12 @@
                 </div>
                 <div class="col-md-9 pe-5">
   
-                  <input type="email" name="email" class="form-control form-control-lg" placeholder="example@gmail.com" />
+                  <input type="email" name="email" class="form-control <%= locals.errors && errors.email ? 'is-invalid' : null %> form-control-lg" placeholder="example@gmail.com" />
                   <% if (locals.errors && errors.email) { %>
-                    <p style="color: red;"><%= errors.email.msg %></p>
+                    <div class="text-danger">
+                      <%= errors.email.msg %> 
+                    </div>
                   <% } %>
-  
                 </div>
               </div>
   
@@ -66,11 +68,12 @@
                 </div>
                 <div class="col-md-9 pe-5">
   
-                  <input type="text" name="country" class="form-control form-control-lg" placeholder="Argentina" />
+                  <input type="text" name="country" class="form-control <%= locals.errors && errors.country ? 'is-invalid' : null %> form-control-lg" placeholder="Argentina" />
                   <% if (locals.errors && errors.country) { %>
-                    <p style="color: red;"><%= errors.country.msg %></p>
+                    <div class="text-danger">
+                      <%= errors.country.msg %> 
+                    </div>
                   <% } %>
-  
                 </div>
               </div>
   
@@ -84,11 +87,12 @@
                 </div>
                 <div class="col-md-9 pe-5">
   
-                  <input type="password" name="password" class="form-control form-control-lg" >
+                  <input type="password" name="password" class="form-control <%= locals.errors && errors.password ? 'is-invalid' : null %> form-control-lg" >
                   <% if (locals.errors && errors.password) { %>
-                    <p style="color: red;"><%= errors.password.msg %></p>
+                    <div class="text-danger">
+                      <%= errors.password.msg %> 
+                    </div>
                   <% } %>
-  
                 </div>
               </div>
   
@@ -106,7 +110,11 @@
                   <label for="admin">Admin</label>
                   <input type="radio" name="category" id="user" value="2" />
                   <label for="user">User</label>
-
+                  <% if (locals.errors && errors.category) { %>
+                    <div class="text-danger">
+                      <%= errors.category.msg %> 
+                    </div>
+                  <% } %>
                 </div>
               </div>
   

@@ -2,6 +2,7 @@ const bcryptjs = require('bcryptjs');
 const db = require('../database/models');
 const { validationResult } = require('express-validator');
 
+
 const mainController = {
   home: (req, res) => {
     db.Book.findAll({
@@ -48,51 +49,72 @@ const mainController = {
     res.render('register');
   },
   processRegister: (req, res) => {
-    db.User.create({
-      Name: req.body.name,
-      Email: req.body.email,
-      Country: req.body.country,
-      Pass: bcryptjs.hashSync(req.body.password, 10),
-      CategoryId: req.body.category
-    })
-      .then(() => {
-        res.redirect('/');
-      })
-      .catch((error) => console.log(error));
-  },
+		const resultValidation = validationResult(req);
+
+		if (resultValidation.errors.length > 0) {
+			return res.render('register', {
+				errors: resultValidation.mapped(),
+				oldData: req.body
+			});
+		}
+
+		let userInDB = User.findByField('email', req.body.email);
+
+		if (userInDB) {
+			return res.render('register', {
+				errors: {
+					email: {
+						msg: 'Este email ya está registrado'
+					}
+				},
+				oldData: req.body
+			});
+		}
+
+		let userToCreate = {
+			...req.body,
+			password: bcryptjs.hashSync(req.body.password, 10),
+		}
+
+		//let userCreated = User.create(userToCreate);
+
+		return res.redirect('/users/login');
+	},
   login: (req, res) => {
     return res.render('login');
   },
   processLogin: (req, res) => {
-    db.User.findOne({where: { email: req.body.email }})
-    .then((usuario) => {
-      if (usuario) {
-        let passOk = bcryptjs.compareSync(req.body.password, usuario.Pass)
-        if (passOk) { 
-          req.session.usuarioLogueado = usuario
-          delete usuario.password
-          res.cookie("email", req.body.email, { maxAge: 300 * 60 * 60 })
-          res.redirect('/');
-        } else {
-          return res.render("login", {
-            errors: {
-              datosMal: {
-                msg: "Las credenciales son inválidas"
-              }
-            }
-          })
-        }
-      } else {
-        return res.render("login", {
-          errors: {
-            datosMal: {
-              msg: "Las credenciales son inválidas"
-            }
-          }
-        })
-      }
-    })
-  },
+		let userToLogin = User.findByField('email', req.body.email);
+		
+		if(userToLogin) {
+			let isOkThePassword = bcryptjs.compareSync(req.body.password, userToLogin.password);
+			if (isOkThePassword) {
+				delete userToLogin.password;
+				req.session.userLogged = userToLogin;
+
+				if(req.body.remember_user) {
+					res.cookie('userEmail', req.body.email, { maxAge: (1000 * 60) * 60 })
+				}
+
+				return res.redirect('/');
+			} 
+			return res.render('login', {
+				errors: {
+					email: {
+						msg: 'Las credenciales son inválidas'
+					}
+				}
+			});
+		}
+
+		return res.render('login', {
+			errors: {
+				email: {
+					msg: 'No se encuentra este email en nuestra base de datos'
+				}
+			}
+		});
+	},
   edit: (req, res) => {
       db.Book.findByPk(req.params.id)
       .then((books) =>{
