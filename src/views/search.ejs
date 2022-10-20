@@ -17,18 +17,24 @@
 
       <form action="/books/search" method="POST" class="col-12 col-lg-auto mb-3 me-lg-3" _lpchecked="1">
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="Book Title..." name="title">
+          <input type="text" class="form-control" placeholder="Colocar TITULO exacto del libro" name="title">
           <button type="submit" class="btn btn-secondary">Search</button>
         </div>
       </form>
-
+      <% if(books.title != undefined || books.estado == 2) { %>
+        <h1 class="display-5 fw-bold"> <%= books.title %></h1>
+        <div class="col-lg-6 mx-auto">
+          <img class="d-block mx-auto mb-4" src="<%= books.cover %>" alt="" width="172" height="257">
+          <p class="lead mb-4 fw-bold">
+          <p class="lead mb-4"><%= books.description %></p>
+        <%} %>
 
     <div class="list-group">
       
     </div>
   </div>
 </div>
-<script src="/js/displayShop.js"></script>
+
 
 <%- include('partials/footer.ejs') %>
 </body>

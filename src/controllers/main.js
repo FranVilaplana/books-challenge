@@ -22,11 +22,23 @@ const mainController = {
         });
   },
   bookSearch: (req, res) => {
-    res.render('search', { books: [] });
+    db.Book.findAll()
+    .then ((books)=>{
+    res.render('search', {books});
+  })
   },
   bookSearchResult: (req, res) => {
-    // Implement search by title
-    res.render('search');
+    db.Book.findOne ({where: { title: req.body.title }}
+      )
+
+        .then(books => { 
+          if (books != undefined) {
+          res.render ('search', {books}
+          );
+        } else {
+          res.redirect ("search")
+        }
+        });
   },
   authors: (req, res) => {
     db.Author.findAll()
@@ -58,7 +70,8 @@ const mainController = {
 			});
 		}
 
-		let userInDB = User.findByField('email', req.body.email);
+		let userInDB = db.User.findOne({where: { email: req.body.email }})
+
 
 		if (userInDB) {
 			return res.render('register', {
