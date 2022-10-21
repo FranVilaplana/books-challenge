@@ -32,10 +32,10 @@
   
                   <input type="text" name="name" class="form-control <%= locals.errors && errors.name ? 'is-invalid' : null %> form-control-lg" />
                   <% if (locals.errors && errors.name) { %>
-                    <div class="text-danger">
-                      <%= errors.name.msg %> 
+                    <div class="text-danger">  
+                        <%= errors.name.msg %> 
                     </div>
-                  <% } %>
+                <% } %>
                 </div>
               </div>
 
@@ -52,9 +52,9 @@
                   <input type="email" name="email" class="form-control <%= locals.errors && errors.email ? 'is-invalid' : null %> form-control-lg" placeholder="example@gmail.com" />
                   <% if (locals.errors && errors.email) { %>
                     <div class="text-danger">
-                      <%= errors.email.msg %> 
+                        <%= errors.email.msg %>
                     </div>
-                  <% } %>
+                <% } %> 
                 </div>
               </div>
   
@@ -70,10 +70,10 @@
   
                   <input type="text" name="country" class="form-control <%= locals.errors && errors.country ? 'is-invalid' : null %> form-control-lg" placeholder="Argentina" />
                   <% if (locals.errors && errors.country) { %>
-                    <div class="text-danger">
-                      <%= errors.country.msg %> 
+                    <div class="text-danger">   <!--agregar esta clase al CSS??-->
+                        <%= errors.country.msg %> 
                     </div>
-                  <% } %>
+                <% } %>
                 </div>
               </div>
   
@@ -130,6 +130,7 @@
         </div>
       </div>
     </div>
+    <script src="/js/registro.js"></script>
   </section>
 </div>
 <%- include('partials/footer.ejs') %>

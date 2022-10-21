@@ -61,38 +61,42 @@ const mainController = {
     res.render('register');
   },
   processRegister: (req, res) => {
-		const resultValidation = validationResult(req);
-
-		if (resultValidation.errors.length > 0) {
-			return res.render('register', {
-				errors: resultValidation.mapped(),
-				oldData: req.body
-			});
-		}
-
-		let userInDB = db.User.findOne({where: { email: req.body.email }})
-
-
-		if (userInDB) {
-			return res.render('register', {
-				errors: {
-					email: {
-						msg: 'Este email ya está registrado'
-					}
-				},
-				oldData: req.body
-			});
-		}
-
-		let userToCreate = {
-			...req.body,
-			password: bcryptjs.hashSync(req.body.password, 10),
-		}
-
-		//let userCreated = User.create(userToCreate);
-
-		return res.redirect('/users/login');
-	},
+    const resultValidation = validationResult(req);
+    if (resultValidation.errors.length > 0) {
+      return res.render("register", {
+        errors: resultValidation.mapped(),
+        oldData: req.body
+      });
+    }
+    db.User.findOne({ where: { email: req.body.email } })
+    .then((userInDB) => {   
+      if(userInDB == req.body.email){ 	
+        console.log('valida usuario ya registrado')
+        return res.render("register", {
+        errors: {
+            email: {
+              msg: 'Este email ya está registrado'
+            }
+          },
+          oldData: req.body
+        });
+      }
+    })
+      console.log('entra a Create')
+      db.User
+          .create(
+            {
+              Name: req.body.name,
+              Email: req.body.email,
+              Country: req.body.country,
+              Pass: bcryptjs.hashSync(req.body.password, 10),
+              CategoryId: req.body.category
+            }
+      )
+      .then(()=> {
+        return res.render('login')})
+      .catch(error => res.send(error))
+},
   login: (req, res) => {
     return res.render('login');
   },
