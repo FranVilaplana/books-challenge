@@ -101,36 +101,38 @@ const mainController = {
     return res.render('login');
   },
   processLogin: (req, res) => {
-		let userToLogin = User.findByField('email', req.body.email);
-		
-		if(userToLogin) {
-			let isOkThePassword = bcryptjs.compareSync(req.body.password, userToLogin.password);
-			if (isOkThePassword) {
-				delete userToLogin.password;
-				req.session.userLogged = userToLogin;
-
-				if(req.body.remember_user) {
-					res.cookie('userEmail', req.body.email, { maxAge: (1000 * 60) * 60 })
-				}
-
-				return res.redirect('/');
-			} 
-			return res.render('login', {
-				errors: {
-					email: {
-						msg: 'Las credenciales son inválidas'
-					}
-				}
-			});
-		}
-
-		return res.render('login', {
-			errors: {
-				email: {
-					msg: 'No se encuentra este email en nuestra base de datos'
-				}
-			}
-		});
+    db.User.findOne({
+      where: {email: req.body.email}
+    }).then((usuario)=>{
+      if (usuario){
+        let passOk = bcryptjs.compareSync(req.body.password,usuario.Pass)
+        console.log(passOk)
+        console.log(usuario)
+        if(passOk){
+          req.session.usuarioLogueado = usuario
+          delete usuario.password
+          res.cookie("userEmail",req.body.email,{maxAge: 300 * 60 * 60})
+          res.redirect("/");
+        
+        }else{
+          return res.render("login",{
+            errors: {
+              datosIncorrectos: {
+                msg: "LAS CREDENCIALES SON INVÁLIDAS"
+              }
+            }
+          })
+        }
+      }else{
+        return res.render("login", {
+          errors: {
+            datosIncorrectos: {
+              msg: "LAS CREDENCIALES SON INVÁLIDAS"
+            }
+          }
+        })
+      }
+    })
 	},
   edit: (req, res) => {
       db.Book.findByPk(req.params.id)

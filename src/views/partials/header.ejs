@@ -11,13 +11,13 @@
     </ul>
 
     <div class="col-md-3 text-end">
-      <a href="/users/login" class="btn btn-outline-primary me-2">Login</a>
-      <a href="/users/register" class="btn btn-outline-primary me-2">Sign-up</a>
-      <% if (locals.usuarioLogueado) {%>
-        <a href="/users/logout">
-          <h5 class="nav-usuario">Logout</h5>
-        </a>
-        <%}%>
-    </div>
+      <%if (!locals.userLogged) { %>
+        <a href="/users/login" class="btn btn-outline-primary me-2">Login</a>
+        <a href="/users/register" class="btn btn-outline-primary me-2">Sign-up</a>
+        <%}else{%>
+          <a href="/users/logout" class="btn btn-outline-primary me-2">LogOut</a> 
+      <%}%>
+  <p><%locals.userLogged%></p>
+</div>
   </header>
 </div>
