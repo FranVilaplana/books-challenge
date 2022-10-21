@@ -57,46 +57,60 @@ const mainController = {
       })
   },
 
+
+
+
   register: (req, res) => {
     res.render('register');
   },
-  processRegister: (req, res) => {
-    const resultValidation = validationResult(req);
-    if (resultValidation.errors.length > 0) {
-      return res.render("register", {
-        errors: resultValidation.mapped(),
-        oldData: req.body
-      });
-    }
-    db.User.findOne({ where: { email: req.body.email } })
-    .then((userInDB) => {   
-      if(userInDB == req.body.email){ 	
-        console.log('valida usuario ya registrado')
+    processRegister: (req, res) => {
+      const resultValidation = validationResult(req);
+
+      if (resultValidation.errors.length > 0) {
         return res.render("register", {
-        errors: {
-            email: {
-              msg: 'Este email ya está registrado'
-            }
-          },
+          errors: resultValidation.mapped(),
           oldData: req.body
         });
       }
-    })
-      console.log('entra a Create')
-      db.User
-          .create(
-            {
-              Name: req.body.name,
-              Email: req.body.email,
-              Country: req.body.country,
-              Pass: bcryptjs.hashSync(req.body.password, 10),
-              CategoryId: req.body.category
-            }
-      )
-      .then(()=> {
-        return res.render('login')})
-      .catch(error => res.send(error))
-},
+      db.User.findOne({ where: { email: req.body.email } })
+      .then((userInDB) => {   
+        if(userInDB == req.body.email){ 	
+          console.log('valida usuario ya registrado')
+          return res.render("register", {
+          errors: {
+              email: {
+                msg: 'Este email ya está registrado'
+              }
+            },
+            oldData: req.body
+          });
+        }
+      })
+        console.log('entra a Create')
+        db.User
+            .create(
+              {
+                Name: req.body.name,
+                Email: req.body.email,
+                Country: req.body.country,
+                Pass: bcryptjs.hashSync(req.body.password, 10),
+                CategoryId: req.body.category
+              }
+        )
+        .then(()=> {
+          return res.render('login')})
+        .catch(error => res.send(error))
+
+  },
+
+
+  logout: (req, res) => {
+		res.clearCookie('userEmail');
+		req.session.destroy();
+		return res.redirect('/');
+	} ,
+
+
   login: (req, res) => {
     return res.render('login');
   },
@@ -134,6 +148,7 @@ const mainController = {
       }
     })
 	},
+
   edit: (req, res) => {
       db.Book.findByPk(req.params.id)
       .then((books) =>{
@@ -141,16 +156,12 @@ const mainController = {
     })
     
   },
-  logout: (req, res) => {
-    res.clearCookie('email');
-    req.session.destroy();
-    return res.render("/");
-  },
+  
+
   processEdit: (req, res) => {
     const resultValidation = validationResult(req);
-    let bookToEdit=db.Book.findByPk(req.params.id)
-    Promise
-    .all([bookToEdit])
+  db.Book.findByPk(req.params.id)
+  
     .then((bookToEdit)=> {
       if (resultValidation.errors.length>0) {
         res.render ('editBook', {bookToEdit, errors: resultValidation.mapped()})
@@ -168,6 +179,8 @@ const mainController = {
         }		
 			})
   },
+
+
   deleteBook: (req, res) => {
     db.Book.update({estado :1 },{ where: { id: req.params.id }, force: true }) // force: true es para asegurar que se ejecute la acción
       .then(() => {

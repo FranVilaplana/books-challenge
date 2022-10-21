@@ -3,7 +3,7 @@ const mainController = require('../controllers/main');
 const router = express.Router();
 const validations = require('../middlewares/validateRegisterMiddleware');
 const guestMiddleware = require('../middlewares/guestMiddleware');
-
+const bookMiddleware = require('../middlewares/validacionBooks');
 
 
 router.get('/', mainController.home);
@@ -22,7 +22,7 @@ router.post('/users/login',mainController.processLogin);
 router.get('/users/logout', mainController.logout);
 router.delete('/books/:id', mainController.deleteBook);
 
-router.get('/books/edit/:id', mainController.edit);
-router.put('/books/edit/:id', mainController.processEdit);
+router.get('/books/edit/:id',  mainController.edit);
+router.put('/books/edit/:id', bookMiddleware, mainController.processEdit);
 
 module.exports = router;
